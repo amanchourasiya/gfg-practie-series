@@ -1,27 +1,31 @@
 class Solution:
     def isCyclic(self, V, adj):
-        # code here
-        stack = []
-        #print(V)
-        print(adj)
-        visited = [False] * V 
-        #print()
-        stack.append(0)
-        #visited[0] = True
-        hasCycle = False
+        visited = [False] * V
+        recStack = [False] * V
 
-        while len(stack) != 0 :
-            ele = stack.pop(0)
-            print('ele', ele)
-            if visited[ele] == True:
-                hasCycle = True
-                break
-
-            visited[ele] = True
-            for i in adj[ele]:
-                stack.append(i)
+        # Visit depth of every branch separately
+        for node in range(V):
+            if visited[node] == False:
+                if self.isCylicUtil(node, visited, recStack, V,adj) == True:
+                    return True
         
-        return hasCycle
+        return False
+
+    
+    # Traverse depth of every path and check if same node occcurs in stack
+    def isCylicUtil(self, v, visited, recStack, V, adj):
+        visited[v] = True
+        recStack[v] = True
+
+        for neighbour in adj[v]:
+            if visited[neighbour] == False:
+                if self.isCylicUtil(neighbour, visited, recStack, V, adj) == True:
+                    return True
+            elif recStack[neighbour] == True:
+                return True
+        
+        recStack[v] = False
+        return False
 
 def test():
     t = int(input())
